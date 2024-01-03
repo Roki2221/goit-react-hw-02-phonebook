@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
 import ContactForm from './ContactForm/ContactForm';
-import Filtercopy from './Filter/Filtercopy';
+import Filter from './Filter/Filter';
+import ContactList from './ContactList/ContactList';
 export default class App extends Component {
   state = {
     contacts: [
@@ -13,14 +14,17 @@ export default class App extends Component {
     filter: '',
   };
 
-  handleSearch = value => {
+  searchValue = value => {
     this.setState({ filter: value });
   };
 
-  handleSubmit = data => {
-    console.log('second');
-    console.log(data);
+  contactsSort = () => {
+    return this.state.contacts.filter(contact =>
+      contact.name.toLowerCase().includes(this.state.filter.toLowerCase())
+    );
+  };
 
+  handleSubmit = data => {
     this.setState(prevState => ({
       contacts: [
         ...prevState.contacts,
@@ -35,41 +39,12 @@ export default class App extends Component {
 
   render() {
     return (
-      //       <div>
-      //   <h1>Phonebook</h1>
-      //   <ContactForm ... />
-
-      //   <h2>Contacts</h2>
-      //   <Filter ... />
-      //   <ContactList ... />
-      // </div>
       <div>
         <h1>Phonebook</h1>
         <ContactForm onSubmit={this.handleSubmit} />
         <h2>Contacts</h2>
-        <Filtercopy onChange={this.handleSearch} />
-        {/* рендер шуканих контактів */}
-
-        {this.state.filter === ''
-          ? this.state.contacts.map(el => (
-              <ul>
-                <li key={el.id}>
-                  {el.name}: {el.number}
-                </li>
-              </ul>
-            ))
-          : this.state.contacts.map(
-              el =>
-                el.name
-                  .toLowerCase()
-                  .includes(this.state.filter.toLowerCase()) && (
-                  <ul>
-                    <li key={el.id}>
-                      {el.name}: {el.number}
-                    </li>
-                  </ul>
-                )
-            )}
+        <Filter onChange={this.searchValue} />
+        <ContactList sortedList={this.contactsSort()} />
       </div>
     );
   }
