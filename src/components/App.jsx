@@ -24,7 +24,21 @@ export default class App extends Component {
     );
   };
 
+  deleteContact = id => {
+    this.setState(prev => ({
+      contacts: prev.contacts.filter(el => el.id !== id),
+    }));
+  };
+
   handleSubmit = data => {
+    if (
+      this.state.contacts
+        .map(el => el.name.toLowerCase())
+        .includes(data.name.toLowerCase())
+    ) {
+      alert(`${data.name} is already in contacts.`);
+      return;
+    }
     this.setState(prevState => ({
       contacts: [
         ...prevState.contacts,
@@ -44,7 +58,10 @@ export default class App extends Component {
         <ContactForm onSubmit={this.handleSubmit} />
         <h2>Contacts</h2>
         <Filter onChange={this.searchValue} />
-        <ContactList sortedList={this.contactsSort()} />
+        <ContactList
+          sortedList={this.contactsSort()}
+          onDelete={this.deleteContact}
+        />
       </div>
     );
   }
