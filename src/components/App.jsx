@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
-
+import ContactForm from './ContactForm/ContactForm';
+import Filtercopy from './Filter/Filtercopy';
 export default class App extends Component {
   state = {
     contacts: [
@@ -9,27 +10,23 @@ export default class App extends Component {
       { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
-    name: '',
-    number: '',
     filter: '',
   };
 
-  nameInputId = nanoid();
-  phoneInputId = nanoid();
-  filterInputId = nanoid();
-  handleChange = evt => {
-    const { name, value } = evt.target;
-    this.setState({ [name]: value });
+  handleSearch = value => {
+    this.setState({ filter: value });
   };
 
-  handleSubmit = evt => {
-    evt.preventDefault();
+  handleSubmit = data => {
+    console.log('second');
+    console.log(data);
+
     this.setState(prevState => ({
       contacts: [
         ...prevState.contacts,
         {
-          name: this.state.name,
-          number: this.state.number,
+          name: data.name,
+          number: data.number,
           id: nanoid(),
         },
       ],
@@ -38,45 +35,19 @@ export default class App extends Component {
 
   render() {
     return (
+      //       <div>
+      //   <h1>Phonebook</h1>
+      //   <ContactForm ... />
+
+      //   <h2>Contacts</h2>
+      //   <Filter ... />
+      //   <ContactList ... />
+      // </div>
       <div>
         <h1>Phonebook</h1>
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor={this.nameInputId}>
-            Name
-            <input
-              type="text"
-              name="name"
-              id={this.nameInputId}
-              onChange={this.handleChange}
-              value={this.state.name}
-              required
-            />
-          </label>
-
-          <label htmlFor={this.phoneInputId}>
-            Number
-            <input
-              type="tel"
-              name="number"
-              id={this.phoneInputId}
-              onChange={this.handleChange}
-              value={this.state.number}
-              required
-            />
-          </label>
-
-          <button type="submit">Add contact</button>
-        </form>
+        <ContactForm onSubmit={this.handleSubmit} />
         <h2>Contacts</h2>
-        <label htmlFor={this.filterInputId}>Find contacts by name</label>
-        <input
-          id={this.filterInputId}
-          type="text"
-          name="filter"
-          onChange={this.handleChange}
-          value={this.state.filter}
-        />
-
+        <Filtercopy onChange={this.handleSearch} />
         {/* рендер шуканих контактів */}
 
         {this.state.filter === ''
